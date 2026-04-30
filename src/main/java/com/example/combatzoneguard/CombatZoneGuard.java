@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -51,6 +52,20 @@ public class CombatZoneGuard extends JavaPlugin implements Listener {
 
         event.setCancelled(true);
         player.teleport(event.getFrom());
+        long remaining = getRemainingSeconds(player);
+        player.sendMessage("\u00a7c\u00a7l\u2694 Savas Korumasi \u00a7r\u00a7c\u2014 Savastayken guvenli bolgeye giremezsin!");
+        player.sendMessage("\u00a77Kalan sure: \u00a7e" + remaining + " \u00a77saniye");
+    }
+
+    @EventHandler
+    public void onTeleport(PlayerTeleportEvent event) {
+        if (event.getTo() == null) return;
+
+        Player player = event.getPlayer();
+        if (!isInCombat(player)) return;
+        if (isPvpEnabled(event.getTo())) return;
+
+        event.setCancelled(true);
         long remaining = getRemainingSeconds(player);
         player.sendMessage("\u00a7c\u00a7l\u2694 Savas Korumasi \u00a7r\u00a7c\u2014 Savastayken guvenli bolgeye giremezsin!");
         player.sendMessage("\u00a77Kalan sure: \u00a7e" + remaining + " \u00a77saniye");
